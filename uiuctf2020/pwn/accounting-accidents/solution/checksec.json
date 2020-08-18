@@ -1,0 +1,14 @@
+{
+    "/home/nikos/ctf/uiuctf/accounting-accident/accounting": {
+        "relro": "partial",
+        "canary": "yes",
+        "nx": "yes",
+        "pie": "no",
+        "rpath": "no",
+        "runpath": "no",
+        "symbols": "yes",
+        "fortify_source": "no",
+        "fortified": "0",
+        "fortify-able": "6"
+    }
+}
