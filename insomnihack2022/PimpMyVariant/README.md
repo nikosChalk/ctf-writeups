@@ -321,7 +321,7 @@ Stack trace:
 
 Awesome! We bypassed the admin check. In the log, we see a PHP error and we also notice the file `/www/UpdateLogViewer.inc`. Let's try accessing it
 
-```html
+```php
 GET /UpdateLogViewer.inc HTTP/1.1
 
 HTTP/1.1 200 OK
