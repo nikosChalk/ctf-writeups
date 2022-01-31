@@ -6,7 +6,7 @@ Categories: Mobile, Reversing
 Description:
 > Our lab administrator has just passed out from a strange virus. Please help us find the password to his messaging app so we can identify what he was working on and save his life.
 >
-> The file `Herald-e3081153dbcbc3f2bcd6aa0453e8ec6f7055deaf5762aee0a794e28e58b8bb12.apk` is given.
+> The file [Herald.apk](Herald-e3081153dbcbc3f2bcd6aa0453e8ec6f7055deaf5762aee0a794e28e58b8bb12.apk) is given.
 
 
 ## Takeaways
