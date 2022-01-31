@@ -477,6 +477,6 @@ The flag is INS{P!mpmYV4rianThat's1flag}
 </body></html>
 ```
 
-We are presented with some cool ASCII art and also the flag!
+We are presented with some cool ASCII art and also the flag! We effectively have an RCE on the web server!
 
 `INS{P!mpmYV4rianThat's1flag}`
