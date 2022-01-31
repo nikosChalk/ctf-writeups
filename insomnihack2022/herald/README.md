@@ -8,11 +8,10 @@ Description:
 >
 > The file [Herald.apk](Herald-e3081153dbcbc3f2bcd6aa0453e8ec6f7055deaf5762aee0a794e28e58b8bb12.apk) is given.
 
-
 ## Takeaways
 
 * How to open an `.apk` in Android Studio: Go to `File` -> `Profile or Debug APK` and select your apk.
-* Using [jadx](https://github.com/skylot/jadx) to decompile android APKs back to Java code (lossy conversion)
+* Using [jadx](https://github.com/skylot/jadx) to decompile android APKs back to Java source code (lossy conversion)
 * [hbctool](https://github.com/bongtrop/hbctool) to modify Hermes Bytecode.
 * How to re-assemble a decompressed apk using the `apktool`
 * How to re-sign a re-assembled apk using [Uber Apk Signer](https://github.com/patrickfav/uber-apk-signer)
