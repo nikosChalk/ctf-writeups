@@ -15,7 +15,22 @@ Description:
 
 ## Takeaways
 
-How to script GDB
+How to script python GDB.
+
+Additional GDB python scripting resources:
+
+* https://sourceware.org/gdb/onlinedocs/gdb/Python-API.html#Python-API
+* https://stackoverflow.com/questions/25431341/adding-breakpoint-command-lists-in-gdb-controlled-from-python-script
+* https://sourceware.org/gdb/onlinedocs/gdb/Breakpoints-In-Python.html#Breakpoints-In-Python
+* https://stackoverflow.com/questions/4060565/how-to-script-gdb-with-python-example-add-breakpoints-run-what-breakpoint-d
+* https://sourceware.org/gdb/onlinedocs/gdb/Events-In-Python.html
+* https://stackoverflow.com/questions/455544/how-to-load-program-reading-stdin-and-taking-parameters-in-gdb
+* https://sourceware.org/gdb/onlinedocs/gdb/Set-Catchpoints.html
+* https://sourceware.org/gdb/onlinedocs/gdb/Values-From-Inferior.html
+* https://sourceware.org/gdb/onlinedocs/gdb/Basic-Python.html
+* https://sourceware.org/gdb/onlinedocs/gdb/Types-In-Python.html
+* https://sourceware.org/gdb/download/onlinedocs/gdb/Breakpoints-In-Python.html#Breakpoints-In-Python
+* https://www.lse.epita.fr/lse-winter-day-2013/slides/gdb-python.pdf
 
 ## Solution
 
