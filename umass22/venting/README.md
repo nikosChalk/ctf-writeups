@@ -19,7 +19,7 @@ So, let's send a request and see what happens.
 
 ![requests.png](writeup-resources/requests.png)
 
-As we can see, several requests are sent out. The 1`GET /inthevents` stands out as it contains an `isAdmin` parameter. So we change it to `true` and repeat the request.
+As we can see, several requests are sent out. The `GET /inthevents` stands out as it contains an `isAdmin` parameter. So we change it to `true` and repeat the request.
 
 ![inthevents.png](writeup-resources/inthevents.png)
 
@@ -68,7 +68,7 @@ With some more testing, we figure out that the application replaces `--` (commen
 
 `If you're getting this you're not me. You'll never log in! ALSO I DIDNT HIDE ANYTHING IN MY PASSWORD SO DONT TRY!`
 
-From the response, it seems that the password is in the flag. So we have to leak it. This is also a bling SQLi as the application does not respond with the query's data. Remember that the original query is `SELECT * from users WHERE username='foo' AND Password = 'bar';`. We will comment out the password part and replace it with a content-based blind SQLi query. So, the eventual query will look like:
+From the response, it seems that the password is in the flag. So we have to leak it. This is also a blind SQLi as the application does not respond with the query's data. Remember that the original query is `SELECT * from users WHERE username='foo' AND Password = 'bar';`. We will comment out the password part and replace it with a content-based blind SQLi query. So, the eventual query will look like:
 
 `SELECT * from users WHERE username='admin' AND Password LIKE 'UMASS{XXX%' /*...`
 
