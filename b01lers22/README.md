@@ -11,4 +11,4 @@
 
 Our team [VUbar](https://ctftime.org/team/1353/) came 31th in place.
 
-Challenges are [publicly available](github.com/b01lers/b01lers-ctf-2022).
+Challenges are [publicly available](https://github.com/b01lers/b01lers-ctf-2022).
