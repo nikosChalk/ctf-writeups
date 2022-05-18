@@ -1,6 +1,6 @@
 # fancynotes
 
-Categories: Web
+Categories: Web, Crypto, Warmup
 
 Description:
 > Hello my friend, I need your help!
