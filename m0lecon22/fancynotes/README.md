@@ -1,4 +1,4 @@
-# fancynotes
+# Fancy Notes
 
 Categories: Web, Crypto, Warmup
 
