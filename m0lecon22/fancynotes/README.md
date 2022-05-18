@@ -27,6 +27,7 @@ Description:
 
     app.logger.debug('Foobar')
     ```
+ * Don't implement the crypto yourself. If you want to sign data, then use an HMAC instead of the scheme used in this challenge!
 
 ## Solution
 
