@@ -11,12 +11,13 @@ Description:
 > https://s3.cdn.justctf.team/b4fb8301-34e3-49d6-9054-88b3a7866593/cli (Binary)<br/>
 > https://s3.cdn.justctf.team/71ce34e6-1eec-4aea-8afb-c51ebac15d58/Dockerfile
 
-**Tags:** ARM, ARMv8, aarch64, string format vulnerability, %n, arbitrary write %n, Docker
+**Tags:** ARM, ARMv8, aarch64, string format vulnerability, %n, arbitrary write %n, Docker, shellcode
 
 ## Takeaways
 
 * Pwning ARM binaries on x86 host
 * Custom pwntools template for ARM binaries
+* Creating ARM shellcode (See [solution.py](solution.py))
 
 ## Setup
 
@@ -225,6 +226,7 @@ There are a few more things to notice:
         NX:       NX disabled
         PIE:      PIE enabled
         RWX:      Has RWX segments
+
     root@2563b6ed5e6e:/$ readelf --program-headers /pwn/cli --wide
     Program Headers:
         Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align

