@@ -82,6 +82,7 @@ cd cli_minimal_aarch64
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 docker build -t cli_minimal_aarch64 .
 
+cd ../
 python solution.py [DEBUG] [NOASLR] [GDB] [REMOTE]
 ```
 
@@ -92,8 +93,10 @@ See [solution.py](solution.py) for more details.
 In this setup, we run the binary in a docker image based on the same platform as the host (e.g. x86-64). This setup can be used with dynamically linked binaries that only depend on ld.so or static binaries. To get started with the exploitation using this setup:
 
 ```bash
+cd cli_minimal_native
 docker build -t cli_minimal_native .
 
+cd ../
 python solution.py [DEBUG] [NOASLR] [GDB] [REMOTE]
 ```
 
