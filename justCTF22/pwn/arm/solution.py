@@ -183,15 +183,13 @@ else:
 #                    EXPLOIT GOES HERE
 #===========================================================
 
-# io.interactive()
-
 io.recvuntil(b'login: ')
 io.sendline(b'admin')
 io.recvuntil(b'password: ')
 io.sendline(b'admin1')
 io.recvuntil(b'> ')
 
-io.interactive()
+# io.interactive()
 
 def send_cmd(cmd):
     io.sendline(cmd)
