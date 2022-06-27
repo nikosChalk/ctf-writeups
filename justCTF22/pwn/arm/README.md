@@ -11,13 +11,20 @@ Description:
 > https://s3.cdn.justctf.team/b4fb8301-34e3-49d6-9054-88b3a7866593/cli (Binary)<br/>
 > https://s3.cdn.justctf.team/71ce34e6-1eec-4aea-8afb-c51ebac15d58/Dockerfile
 
-**Tags:** ARM, ARMv8, aarch64, string format vulnerability, %n, arbitrary write %n, Docker, shellcode
+**Tags:** ARM, ARMv8, aarch64, string format vulnerability, %n, arbitrary write %n, Docker, shellcode, ARM cheetsheet
 
 ## Takeaways
 
 * Pwning ARM binaries on x86 host
 * Custom pwntools template for ARM binaries
 * Creating ARM shellcode (See [solution.py](solution.py))
+
+Useful Resources:
+
+* [azeria-labs.com/arm-on-x86-qemu-user](https://azeria-labs.com/arm-on-x86-qemu-user/)
+* [ROPing-on-Aarch64](https://blog.perfect.blue/ROPing-on-Aarch64)
+* [ARM 32-bit cheatsheet](https://azeria-labs.com/downloads/cheatsheetv1.3-1920x1080.png) - from azeria labs
+* [Armv8 aarch64 cheetsheet](Armv8-A-AArch64-Cheatsheet.png) - from azeria labs
 
 ## Setup
 
