@@ -1,0 +1,50 @@
+
+set pagination off
+set $BASE=0x00555555554000
+gef config context.enable False
+
+# main
+break *($BASE+0x1100)
+command
+
+    # 001011c0 88 44 24 20     MOV        byte ptr [RSP + local_f8],AL
+    break *($BASE+0x11c0)
+    command
+        silent
+        printf "random nibble: %02d\n", $rax
+        continue
+    end
+
+    # after
+    # rand_int = rand();
+    # puVar3 = (ulong *)mmap((void *)((long)rand_int * 0x1000 + 0x10000),0x1000,
+    #                         (uint)(uVar5 == i) * 3,0x22,-1,0);
+    break *($BASE+0x1217)
+    command
+        silent
+        set $touchable=($rdx == 0x3)
+        printf "[%02d] Setting %p to 0x%016lx (TOUCHABLE: %d)\n", $r15, ((unsigned long)$rbp + (unsigned long)$r15*0x8), $rax, $touchable
+        continue
+    end
+
+    # after: (code *)mmap((void *)0x0,0x1000, PROT_READ|PROT_WRITE|PROT_EXEC, 0x22,-1,0);
+    break *($BASE+0x012b6)
+    command
+        silent
+        printf "shellcode loaded at address %p\n", $rax
+
+        # use hardware breakpoint because of self-modifying code. Otherwise the shellcode area gets corrupted by gdb
+        hbreak *($rax+0x2d)
+        command
+            # commands to execute when we reach our shellcode
+            gef config context.enable True
+            context
+            printf "l33tcode reached\n" 
+        end
+        continue
+    end
+
+    continue
+end
+
+continue
