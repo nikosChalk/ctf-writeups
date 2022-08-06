@@ -27,7 +27,7 @@ Description:
 
 ## Solution
 
-This challenge is a fix of unintended solutions of the previous challenge, [A Horse with No Names](../a-horse-with-no-names). Here is the challenge's source code:
+This challenge is a fix of unintended solutions of the previous challenge, [A Horse with No Names](../a-horse-with-no-names). Here is the current challenge's source code:
 
 ```python
 #!/usr/bin/python3
@@ -45,7 +45,7 @@ else:
     print("You make it through the journey, but are severely dehydrated. This is all you can remember:", discovery)
 ```
 
-We will not go into details here, as these have already been covered bu the [previous challenge](../a-horse-with-no-names). However, we will go over a diff of the two challenges:
+We will not go into details here, as these have already been covered by the [previous challenge](../a-horse-with-no-names). However, we will go over a diff of the two challenges:
 
 ```diff
 diff --git a/a-horse-with-no-names/src/desert.py b/a-horse-with-no-neighs/src/desert.py
@@ -78,7 +78,7 @@ So clearly our previous payload will not work as it used name such as `open`, `h
 
 ### A fresh approach
 
-Let's try with unicode characters. From the [documentation], we know that:
+Let's try with unicode characters. From the [documentation](https://docs.python.org/3/reference/lexical_analysis.html#identifiers), we know that:
 
 > Python 3.0 introduces additional characters from outside the ASCII range (see PEP 3131). For these characters, the classification uses the version of the Unicode Character Database as included in the [unicodedata](https://docs.python.org/3/library/unicodedata.html#module-unicodedata) module.
 >
@@ -88,7 +88,7 @@ Let's try with unicode characters. From the [documentation], we know that:
 
 This is interesting. What if our input was "ev𝕒l(1)" instead of "eval(1)". Would this trigger the `re.match`? The answer is no.
 
-`re.match` would be invoked on our input string "ev𝕒l(1)", which does not contain 4 consecutive alphabetical characters. The "𝕒" is U+0x1D552, which is not matched by the regex. However, when our input is placed inside `compile` to generate the code object, the identifier "ev𝕒l" is converted to its normal NFKC form according to the documentation. And the normal value of "𝕒" is "a"! We can write a simple python script that finds all these mappings:
+`re.match` would be invoked on our input string "ev𝕒l(1)", which does not contain 4 consecutive alphabetical characters. The "𝕒" is U+0x1D552, which is not matched by the regex `[a-zA-Z]{4}` *(Note however that the regex `\w{4}` would match the whole "ev𝕒l" string)*. However, when our input is placed inside `compile` to generate the code object, the identifier "ev𝕒l" is converted to its normal NFKC form according to the documentation. And the normal value of "𝕒" is "a"! We can write a simple python script that finds all these mappings:
 
 ```python
 import sys
@@ -113,7 +113,7 @@ and here the result:
 
 So, we can use that to bypass the `match` restriction, great! There is one small thing though. We cannot use `lambda` from our previous exploit. This is because `lambda` is a keyword and must appear as ASCII, thus not passing the `match` check.
 
-The core idea behind the `lambda` in the previous exploit, was to increase nesting in order to bypass the `.replace(co_names=()` restriction. We can increase nesting by using instead list comprehension:
+The core idea behind the `lambda` in the previous exploit, was to increase nesting in order to bypass the `.replace(co_names=()` restriction. We can increase nesting by using list comprehensions instead:
 
 ```python
 horse='(eval for _ in (1,))'
@@ -130,7 +130,7 @@ Here, inside `horse`, we are creating a generator expression (`genexpr` object),
 So, let's combine all the pieces to generate our input exploit:
 
 ```python
-(bre𝐚kpo𝐢nt() for _ in (1,))
+(bre𝐚kpo𝐢nt() for _ in (1,)) # "a" and "i" are in weird unicode format
 ```
 
 In the source code, the result from `eval` is passed to a `list()` constructor. So, our generator object will become a concrete list and its elements will be evaluated.
@@ -148,6 +148,6 @@ Thus, when we enter the above payload, we get into the the Pdb debugger and can 
 - `eval(input())`
 - `exec('import os; os.system("sh")')`
 
-*with appropriate encoding ofcourse)*
+*with appropriate encoding of course)*
 
 
