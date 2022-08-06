@@ -41,18 +41,16 @@ else:
 Let's examine the requirements to reach the `eval` statement:
 
 1. `re.match(r"[a-zA-Z]{4}", horse)` must return false. This means that our input must not start with exactly 4 alphabetic characters.
-2. `len(set(re.findall(r"[\W]", horse))) > 4` must also return false. The `\W` is equivalent to `[^a-zA-Z0-9_]` according to the [documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax).
+2. `len(set(re.findall(r"[\W]", horse))) > 4` must also return false. The `\W` , according to the [documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax), matches any character which is not a word. For ASCII, characters it means that `\W` is equivalent to `[^a-zA-Z0-9_]`.
   - So, for example, our input must contain `<=4` symbols, counting spaces also as symbols.
   - Underscores are excluded
 3. `eval` evaluates a single expression, so we have to make our payload a single expression or make it multiline and wrap it under `exec`.
 4. Our input is not directly evaluated. It is filtered through `.replace(co_names=()`.
 
-*(One thing to keep in mind is that we can use as many numbers as we want. So, for example, we could have something like `arr[123567]` in our input.)*
-
 The weirdest part here is the `.replace(co_names=()`. Let's examine the documentation about what `co_names` are:
 
 * From the [data model documentation](https://docs.python.org/3/reference/datamodel.html) we figure out that: <br/> `co_names` is a tuple containing the names used by the bytecode
-* From the [inspect module documentations](https://docs.python.org/3/library/inspect.html) we figure out that: <br/> `co_names`: tuple of names other than arguments and function locals
+* From the [inspect module documentations](https://docs.python.org/3/library/inspect.html) we figure out that: <br/> `co_names` is a tuple of names other than arguments and function locals
 
 Let's also visualize this:
 
@@ -126,7 +124,7 @@ Now, the remaining symbols in the payload are related to strings. However, we ca
 open.__name__.__getitem__(0)+set.__name__.__getitem__(0)
 ```
 
-In this way, we avoided using the double quote special characters. We can also do the same for the space character and the `/`, by looking at the `__doc__` property which contains a lot of text. However, we introduced a new symbol, `+`. We can also replace that.
+In this way, we avoided using the double quote special characters. The `__doc__` property of objects holds the documentation, so using that, we can even generate the harder "cat /flag" string which contains a space and a slash. However, in the above solution we introduced a new symbol, `+`. But, we can also replace that in a similar way.
 
 When we do `'a'+'b'`, this is equivalent to `'a'.__add__('b')`. So, for "os", we finally have
 
@@ -136,11 +134,12 @@ open.__name__.__getitem__(0).__add__(set.__name__.__getitem__(0))
 # Out[17]: 'os'
 ```
 
-This can be a really tedious process, so let's automate it:
+This can be a really tedious process to generate "cat /flag", so let's automate it:
 
 ```python
 def generator(cmd):
-    # Make sure to use the same python version as the target when building the mapping.
+    # Make sure to use the same python version as the target when building the mapping
+    # (because the __doc__ might change accross versions)
     # Target uses Python 3.8.10
     mapping = {
         'o': "open.__name__.__getitem__(0)",
