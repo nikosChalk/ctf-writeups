@@ -1,6 +1,6 @@
-# A Horse with No Names
+# no-syscalls-allowed.c
 
-Categories: Jail/Python
+Categories: Pwn
 
 Description:
 > no-syscalls-allowed.c
