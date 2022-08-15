@@ -18,14 +18,15 @@ Description:
 >
 > [no_syscalls_allowed.c](src/no_syscalls_allowed.c)
 
-**Tags:** pwn, seccomp filter, timing side-channel, shellcode with pwntools
+**Tags:** pwn, seccomp filter, timing side-channel, shellcode with pwntools, shellcode template
 
 ## Takeaways
 
-- Shellcode created via pwntools `asm()`
+- Shellcode created via pwntools `asm()`. You can use it as a template in the future.
   - Relative addressing in shellcode
   - Comments in shellcode
   - Data in shellcode
+  - Parameterized shellcode
 - Always be on the look out for side-channels
 - Jumping to shellcode with active registers, can leak important information!
 
