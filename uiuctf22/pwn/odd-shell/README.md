@@ -62,7 +62,7 @@ Let's insert a breakpoint at the instruction which jumps to the shellcode and ex
 
 ```python
 from pwn import *
-context.binary = elfexe = ELF('./chal')
+context.binary = elfexe = ELF('./src/chal')
 def start(argv=[], *a, **kw):
     '''Start the exploit against the target.'''
     if args.GDB:
