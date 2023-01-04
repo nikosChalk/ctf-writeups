@@ -123,14 +123,14 @@ io.close()
 
 <table>
 <tr>
-<td align="center">
+<td align="center" width=50%>
 
 ![before.png](../writeup-resources/chal2-before.png)
 
 `syscall` from Stage 1 is about to be executed
 
 </td>
-<td align="center">
+<td align="center" width=50%>
 
 ![after.png](../writeup-resources/chal2-after.png)
 
@@ -169,14 +169,14 @@ def craft_shellcode_stage2():
 
 <table>
 <tr>
-<td align="center">
+<td align="center" width=50%>
 
 ![before2.png](../writeup-resources/chal2-before2.png)
 
 `syscall` from Stage 1 is about to be executed
 
 </td>
-<td align="center">
+<td align="center" width=50%>
 
 ![after2.png](../writeup-resources/chal2-after2.png)
 
