@@ -3,9 +3,9 @@
 Categories: Misc
 
 Description:
-> ???
+> D1d u like python,Their are some easy trick.Have fun!!!!
 > 
->author: ??
+>author: crazyman @ r3kapig
 >
 >[chal](src-public/service.py)
 > 
