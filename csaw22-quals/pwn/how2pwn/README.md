@@ -3,9 +3,9 @@
 Categories: Pwn
 
 Description:
-> ???
+> how2pwn is a series of beginner-friendly pwn challenges to make pwning and shellcoding more approachable.
 > 
->author: ??
+>author: n132, Jordi
 >
 >[challenge files](public/)
 > 
