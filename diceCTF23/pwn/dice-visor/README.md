@@ -24,16 +24,16 @@ Description:
 For this challenge, we are given 3 files: A kernel image, an initramfs, and the `dicer-visor` binary which is the hypervisor itself.
 
 ```bash
-nikos@ctf-box:~/ctfs/diceCTF23/pwn/dicer-visor/writeup/tmp$ file dicer-visor
+fane@ctf-box:~/dicer-visor$ file dicer-visor
 dicer-visor: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f9ef7fc5756088242c50b7f6b1dbee7ccee624de, for GNU/Linux 3.2.0, not stripped
-nikos@ctf-box:~/ctfs/diceCTF23/pwn/dicer-visor/writeup/tmp$ ./dicer-visor
+fane@ctf-box:~/dicer-visor$ ./dicer-visor
 Usage: ./dicer-visor <bzImage> <initrd>
 ```
 
 Let's run the challenge locally:
 
 ```log
-dicer-visor$ ./dicer-visor bzImage initramfs.cpio.gz
+fane@ctf-box:~/dicer-visor$ ./dicer-visor bzImage initramfs.cpio.gz
 Dicer-visor - DiceGang Security Hypervisor
 [*] Created VM
 [*] Loaded kernel image: bzImage
@@ -166,8 +166,8 @@ So, the `ioctl` command `0xbeef` writes to the I/O port `0xd1ce` the value `d1ce
 
 ### Analysis - `dice-visor.ko`
 
-```
-nikos@ctf-box:~/ctfs/diceCTF23/pwn/dicer-visor$ file dicer-visor
+```bash
+fane@ctf-box:~/dicer-visor$ file dicer-visor
 dicer-visor: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f9ef7fc5756088242c50b7f6b1dbee7ccee624de, for GNU/Linux 3.2.0, not stripped
 ```
 
@@ -432,7 +432,7 @@ The `run_vm` now is quite self-explanatory and interesting. As we recall from th
 One last thing to notice about `run_vm`, is that it sets up a seccomp filter. Using [seccomp-tools](https://github.com/david942j/seccomp-tools), we can easily dump it:
 
 ```bash
-nikos@ctf-box:~/ctfs/diceCTF23/pwn/dicer-visor$ seccomp-tools dump "./dicer-visor bzImage initramfs.cpio.gz"
+fane@ctf-box:~/dicer-visor$ seccomp-tools dump "./dicer-visor bzImage initramfs.cpio.gz"
 Dicer-visor - DiceGang Security Hypervisor
 [*] Created VM
 [*] Loaded kernel image: bzImage
@@ -555,7 +555,7 @@ dumpShellcode(shellcode)
 When we execute `python gen-shellcode.py`, we get our C-style formatted shellcode which we can plug into our main.c:
 
 ```bash
-nikos@ctf-box:~/ctfs/diceCTF23/pwn/dicer-visor$ python gen-shellcode.py
+fane@ctf-box:~/dicer-visor$ python gen-shellcode.py
 const char *shellcode = "\x48\x31\xd2\x6a\x01\xfe\x0c\x24\x48\xb8\x66\x6c\x61\x67\x2e\x74\x78\x74\x50\x6a\x02\x58\x48\x89\xe7\x31\xf6\x0f\x05\x41\xba\xff\xff\xff\x7f\x48\x89\xc6\x6a\x28\x58\x6a\x01\x5f\x99\x0f\x05";
 const size_t shellcode_len = 47;
 ```
