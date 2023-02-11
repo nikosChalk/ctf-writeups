@@ -164,7 +164,7 @@ So, to summarize the above operations:
 
 So, the `ioctl` command `0xbeef` writes to the I/O port `0xd1ce` the value `d1ce`; and the `iotctl` command `0xdead` writes to the I/O port `0xdead` the `shellcode` buffer (`0x100` bytes). Now it's time to analyze the hypervisor!
 
-### Analysis - `dice-visor.ko`
+### Analysis - `dice-visor`
 
 ```bash
 fane@ctf-box:~/dicer-visor$ file dicer-visor
