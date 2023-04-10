@@ -15,8 +15,10 @@ Description:
 
 ## Takeaways
 
+* Environment setup for RISC-V binaries
 * Running RISC-V binaries
-* pwning RISC-V binaries with pwntools
+* pwning RISC-V binaries with pwntools and gdb
+* shellcode generation for RISC-V
 
 ## Setting up an environment
 
@@ -168,7 +170,7 @@ index c6e6708..7f89bd8 100644
 Let's try running it again now:
 
 ```bash
-nikos@ctf-box:~/ctfs/hack-a-sat-2023/riscv/writeup/src$ python minimal-template.py
+nikos@ctf-box:~$ python minimal-template.py
 [*] '~/smash-baby'
     Arch:     riscv-32-little
     RELRO:    Partial RELRO
@@ -205,21 +207,21 @@ Traceback (most recent call last):
     io = start(arguments)
   File "~/minimal-template.py", line 14, in start
     return gdb.debug([elfexe.path] + argv, gdbscript, elfexe.path, *a, *kw)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/context/__init__.py", line 1578, in setter
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/context/__init__.py", line 1578, in setter
     return function(*a, **kw)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/gdb.py", line 539, in debug
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/gdb.py", line 539, in debug
     sysroot = sysroot or qemu.ld_prefix(env=env)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/context/__init__.py", line 1578, in setter
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/context/__init__.py", line 1578, in setter
     return function(*a, **kw)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/qemu.py", line 162, in ld_prefix
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/qemu.py", line 162, in ld_prefix
     with process([path, '--help'], env=env) as io:
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/tubes/process.py", line 258, in __init__
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/tubes/process.py", line 258, in __init__
     executable_val, argv_val, env_val = self._validate(cwd, executable, argv, env)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/tubes/process.py", line 518, in _validate
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/tubes/process.py", line 518, in _validate
     argv, env = normalize_argv_env(argv, env, self, 4)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/util/misc.py", line 204, in normalize_argv_env
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/util/misc.py", line 204, in normalize_argv_env
     log.error("argv must be strings or bytes: %r" % argv)
-  File "/home/nikos/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/log.py", line 439, in error
+  File "~/.pyenv/versions/3.10.5/lib/python3.10/site-packages/pwnlib/log.py", line 439, in error
     raise PwnlibException(message % args)
 pwnlib.exception.PwnlibException: argv must be strings or bytes: [None, '--help']
 ```
@@ -316,7 +318,7 @@ As we can see, the binary reads two environment variables: `FLAG` and `TIMEOUT`.
 
 Next, the `FLAG` environment variable is read, written to `flag.txt`, and then unset from the environment variables. We also see that the `main` function leaks a stack address for us by printing `&env_flag`.
 
-The most interesting functions now to reverse are `syncronize` and `read_message`:
+The most interesting functions now to reverse are `syncronize` and `read_message` as we can see from the loop in `main()`:
 
 ```c
 undefined4 main(void) {
@@ -421,7 +423,7 @@ int read_message(int zero) {
 The functions `do_face`, `do_aa`, `do_1b1` all read input from the `stdin` using `read` to a local buffer. The function `do_1b1` is vulnerable to a buffer overflow:
 
 ```c
-undefined4 do_1b1_BOF(int param_1) {
+undefined4 do_1b1(int param_1) {
   undefined auStack_28 [20];
   
   uint local_14 = read(param_1,auStack_28,60);
@@ -523,6 +525,8 @@ main:
 ### Other
 
 * [**RISC-V Assembly Programmer's Manual**](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md#load-and-store-global) - Very good resource.
+* [RISC-V instruction set cheatsheet](https://mark.theis.site/riscv/)
+* [RISC-V instruction set reference](https://msyksphinz-self.github.io/riscv-isadoc/html/index.html)
 * [Pseudo-instructions](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md#-a-listing-of-standard-risc-v-pseudoinstructions)
 * [Assembler directives](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md#-a-listing-of-standard-risc-v-pseudoinstructions)
 * [Relative/Absolute addressing, labels, GOT accessing](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md#labels)
@@ -533,8 +537,8 @@ main:
 So, we have a buffer overflow and we know our architecture. Let's start out exploitation!
 
 ```bash
-nikos@ctf-box:~/ctfs/hack-a-sat-2023/riscv/writeup/src$ checksec --file=./smash-baby
-[*] '/home/nikos/ctfs/hack-a-sat-2023/riscv/writeup/src/smash-baby'
+nikos@ctf-box:~$ checksec --file=./smash-baby
+[*] '~/smash-baby'
     Arch:     riscv-32-little
     RELRO:    Partial RELRO
     Stack:    No canary found
