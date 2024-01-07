@@ -113,6 +113,11 @@ done
 umass22[rev]=1 # baby-vm
 umass22[web]=2 # umassdining, venting
 
+declare -A lakecCTF23
+for category in "${categories[@]}"; do
+    lakecCTF23[$category]=0
+done
+lakecCTF23[pwn]=1 # trustMEE
 
 # Gather statistics per category
 declare -A category_counts
@@ -134,6 +139,7 @@ for category in "${categories[@]}"; do
     acc=$((acc+uiuctf22[$category]))
     acc=$((acc+uiuctf23[$category]))
     acc=$((acc+umass22[$category]))
+    acc=$((acc+lakecCTF23[$category]))
     category_counts[$category]=$acc
 
     printf "[$category] has %02d challenges\n" ${category_counts[$category]}
