@@ -1,35 +1,140 @@
 #!/bin/bash
 
 # Find the categories dynamically
-categories=()
-for ctf in ./*/; do
-  
-  # Skip certain directories
-  if [ "$(basename "$ctf")" = "pwnable.tw" ]; then
-    continue
-  fi
+categories=(
+  "crypto"
+  "hypervisor-pwn"
+  "misc"
+  "pwn"
+  "pyjail"
+  "rev"
+  "web"
+)
+echo "Using categories: ${categories[@]}"
 
-  for category in "$(basename $ctf)"/*/; do
-    categories+=("$(basename $category)")
-  done
+declare -A angstromctf23
+for category in "${categories[@]}"; do
+    angstromctf23[$category]=0
 done
+angstromctf23[pyjail]=1 # obligatory
 
-categories=($(echo "${categories[@]}" | tr ' ' '\n' | sort -u)) # remove duplicates
-echo "Found categories: ${categories[@]}"
+declare -A b01lers22
+for category in "${categories[@]}"; do
+    b01lers22[$category]=0
+done
+b01lers22[pwn]=1 # veryfastvm
+b01lers22[web]=1 # hackerplace
+
+declare -A csaw22finals
+for category in "${categories[@]}"; do
+    csaw22finals[$category]=0
+done
+csaw22finals[pyjail]=2 # embryo-leak, super-guesser-game
+
+declare -A csaw22quals
+for category in "${categories[@]}"; do
+    csaw22quals[$category]=0
+done
+csaw22quals[pwn]=1 # how2pwn
+
+declare -A diceCTF23
+for category in "${categories[@]}"; do
+    diceCTF23[$category]=0
+done
+diceCTF23[hypervisor-pwn]=1 # dice-visor
+diceCTF23[misc]=1 # mlog
+diceCTF23[rev]=3 # not-baby-parallelism, parallelism, time-travel
+
+declare -A googleCTF22
+for category in "${categories[@]}"; do
+    googleCTF22[$category]=0
+done
+googleCTF22[misc]=1 # appnote
+googleCTF22[pwn]=1  # segfault-labyrinth
+googleCTF22[pyjail]=1  # treebox
+
+declare -A hackasat23
+for category in "${categories[@]}"; do
+    hackasat23[$category]=0
+done
+hackasat23[pwn]=2 # RISC-V-Smash baby, dROP-Baby
+
+declare -A insomnihack2022
+for category in "${categories[@]}"; do
+    insomnihack2022[$category]=0
+done
+insomnihack2022[rev]=1 # herald
+insomnihack2022[web]=1 # PimpMyVariant
+
+declare -A justCTF22
+for category in "${categories[@]}"; do
+    justCTF22[$category]=0
+done
+justCTF22[pwn]=1 # arm
+
+declare -A m0lecon22
+for category in "${categories[@]}"; do
+    m0lecon22[$category]=0
+done
+m0lecon22[crypto]=1 # fancynotes
+m0lecon22[web]=1 # dumbforum
+
+declare -A midnightquals23
+for category in "${categories[@]}"; do
+    midnightquals23[$category]=0
+done
+midnightquals23[pwn]=1 # scaas
+midnightquals23[rev]=1 # oss
+
+declare -A uiuctf20
+for category in "${categories[@]}"; do
+    uiuctf20[$category]=0
+done
+uiuctf20[pwn]=2 # accounting-accidents, baby-kernel
+
+declare -A uiuctf22
+for category in "${categories[@]}"; do
+    uiuctf22[$category]=0
+done
+uiuctf22[pwn]=2 # no-syscalls-allowed, odd-shell
+uiuctf22[pyjail]=3 # a-horse-with-no-names, a-horse-with-no-neighs, safepy
+
+declare -A uiuctf23
+for category in "${categories[@]}"; do
+    uiuctf23[$category]=0
+done
+uiuctf23[pwn]=3    # chainmail, virophage, zapping-a-suid1
+uiuctf23[pyjail]=1 # rattler-read
+
+declare -A umass22
+for category in "${categories[@]}"; do
+    umass22[$category]=0
+done
+umass22[rev]=1 # baby-vm
+umass22[web]=2 # umassdining, venting
+
 
 # Gather statistics per category
 declare -A category_counts
 for category in "${categories[@]}"; do
 
-    category_counts[$category]=0
-
-    dirs=$(find . -type d -iname "$category" | sort)
-    for dir in $dirs; do
-        file_count=$(ls -l "$dir" | grep '^d' | tail -n +1 | wc -l)
-        category_counts[$category]=$((category_counts[$category]+file_count))
-
-        echo "[$category] Directory $dir has $file_count challenges"
-    done
+    acc=0
+    acc=$((acc+angstromctf23[$category]))
+    acc=$((acc+b01lers22[$category]))
+    acc=$((acc+csaw22finals[$category]))
+    acc=$((acc+csaw22quals[$category]))
+    acc=$((acc+diceCTF23[$category]))
+    acc=$((acc+googleCTF22[$category]))
+    acc=$((acc+hackasat23[$category]))
+    acc=$((acc+insomnihack2022[$category]))
+    acc=$((acc+justCTF22[$category]))
+    acc=$((acc+m0lecon22[$category]))
+    acc=$((acc+midnightquals23[$category]))
+    acc=$((acc+uiuctf20[$category]))
+    acc=$((acc+uiuctf22[$category]))
+    acc=$((acc+uiuctf23[$category]))
+    acc=$((acc+umass22[$category]))
+    category_counts[$category]=$acc
 
     printf "[$category] has %02d challenges\n" ${category_counts[$category]}
 done
@@ -48,8 +153,3 @@ echo "|----|----|" # dashes
 for category in "${categories[@]}"; do
   echo "| $category | ${category_counts[$category]} |"
 done
-
-
-
-
-
