@@ -8,6 +8,7 @@ categories=(
   "pwn"
   "pyjail"
   "rev"
+  "Android"
   "web"
 )
 echo "Using categories: ${categories[@]}"
@@ -119,6 +120,13 @@ for category in "${categories[@]}"; do
 done
 lakecCTF23[pwn]=1 # trustMEE
 
+declare -A insomnihack2024
+for category in "${categories[@]}"; do
+    insomnihack2024[$category]=0
+done
+insomnihack2024[pwn]=1     # CryptoNotes
+insomnihack2024[Android]=1 # CryptoNotes
+
 # Gather statistics per category
 declare -A category_counts
 for category in "${categories[@]}"; do
@@ -140,6 +148,7 @@ for category in "${categories[@]}"; do
     acc=$((acc+uiuctf23[$category]))
     acc=$((acc+umass22[$category]))
     acc=$((acc+lakecCTF23[$category]))
+    acc=$((acc+insomnihack2024[$category]))
     category_counts[$category]=$acc
 
     printf "[$category] has %02d challenges\n" ${category_counts[$category]}

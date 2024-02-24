@@ -1,0 +1,10 @@
+
+target remote 127.0.0.1:7777
+
+
+# before canary check
+b *get_algo+0x7f
+# pop rbp; ret;
+b *get_algo+0xa8
+
+# continue
