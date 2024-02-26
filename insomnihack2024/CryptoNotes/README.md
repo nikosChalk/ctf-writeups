@@ -15,4 +15,4 @@ Description:
 
 **Tags:** pwn, Android, Intent, deserialization, stack buffer overflow
 
-The writeup for this challenge can be found in [chalkiadakis.me/posts/insomnihack-teacer24/cryptonotes](https://chalkiadakis.me/posts/insomnihack-teacer24/cryptonotes/). The PoC can be found in the [solution/](solution) directory.
+The writeup for this challenge can be found in [chalkiadakis.me/posts/insomnihack-teaser24/cryptonotes](https://chalkiadakis.me/posts/insomnihack-teaser24/cryptonotes/). The PoC can be found in the [solution/](solution) directory.
