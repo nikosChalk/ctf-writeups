@@ -33,10 +33,12 @@ The clue is: "*Any permission in your malicious application will be automaticall
 6. The overlay will mimic the benign's app UI in order to capture the PIN and display it on the overlay.
 7. The POC Tester takes a screensot after a few seconds and presents it to us.
 
+The complete malicious app can be found in the [solution](./solution) directory.
+
 When the challenge was presented, the Android version was unknown, but we assumed that overlays might work. After writing the overlay POC, we firgured out that the Android version was 10 (API level 29).
 
 Also the POC Tester had no internet access.
 
-The complete malicious app can be found in the [solution](./solution) directory.
+An alternative way is to just straight up read the benign app's code from our malicious app (yes that is possible) and extract the PIN. Then, to exfiltrate the PIN we can be creative, like using overlays, notifications, etc. which will be shown in the final screenshot.
 
 Obligatory flag: `SEKAI{Ev3ry_K3yb0ard_1s_Ins3cur3}`
