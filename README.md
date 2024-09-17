@@ -14,5 +14,5 @@ This repository contains the following number of writeups per category:
 | pwn | 17 |
 | pyjail | 8 |
 | rev | 6 |
-| Android | 1 |
+| Android | 2 |
 | web | 5 |

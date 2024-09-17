@@ -133,6 +133,13 @@ for category in "${categories[@]}"; do
 done
 midnightquals24[pwn]=1 # roborop
 
+declare -A sekaictf24
+for category in "${categories[@]}"; do
+    sekaictf24[$category]=0
+done
+sekaictf24[Android]=1 # hijacker
+
+
 # Gather statistics per category
 declare -A category_counts
 for category in "${categories[@]}"; do
@@ -156,6 +163,7 @@ for category in "${categories[@]}"; do
     acc=$((acc+lakecCTF23[$category]))
     acc=$((acc+insomnihack2024[$category]))
     acc=$((acc+midnightquals24[$category]))
+    acc=$((acc+sekaictf24[$category]))
     category_counts[$category]=$acc
 
     printf "[$category] has %02d challenges\n" ${category_counts[$category]}
