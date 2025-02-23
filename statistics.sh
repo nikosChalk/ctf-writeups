@@ -139,6 +139,12 @@ for category in "${categories[@]}"; do
 done
 sekaictf24[Android]=1 # hijacker
 
+declare -A trx25
+for category in "${categories[@]}"; do
+    trx25[$category]=0
+done
+trx25[pwn]=1 # virtual_insanity
+trx25[pyjail]=1 # golf
 
 # Gather statistics per category
 declare -A category_counts
@@ -164,6 +170,7 @@ for category in "${categories[@]}"; do
     acc=$((acc+insomnihack2024[$category]))
     acc=$((acc+midnightquals24[$category]))
     acc=$((acc+sekaictf24[$category]))
+    acc=$((acc+trx25[$category]))
     category_counts[$category]=$acc
 
     printf "[$category] has %02d challenges\n" ${category_counts[$category]}
